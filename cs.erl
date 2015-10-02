@@ -1,20 +1,20 @@
 -module(cs).
 -compile(export_all).
 
-lss() ->
+s() ->
     lists:seq(1,10).
 
-lsm() ->
+m() ->
   lists:map(fun(X) -> X*10 end, [1,2,3]).
   %[10,20,30]
 
-lsfm() ->
+fm() ->
   lists:flatmap(fun(X) -> [X*10] end, [1,2,3]).
 
-pr() ->
+p() ->
   spawn(fun()->io:format("~p~n",[2+2]) end).
 
-pr1() ->
+p1() ->
   % processes
   G = fun(X) ->
       timer:sleep(10), io:format("~p~n", [X]) end,
@@ -24,7 +24,8 @@ tc() ->
   %type conversion
   binary_to_atom(<<"Erlang">>, utf8).
 % 'Erlang'
-iao() ->
-  % infix append operator 
+
+in() ->
+  % infix append operator
   [1] ++ [2] ++ [3].
 % [1,2,3]
