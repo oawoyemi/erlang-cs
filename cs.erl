@@ -4,6 +4,9 @@
 stringEquality() ->
   string:equal("ABC", "abc").
 
+string_binaryToChars(L) ->
+  C = [X || <<X:1/binary>> <= L].
+
 
 console_print() ->
   io:format("~s~n", ["hello"]),
