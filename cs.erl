@@ -1,9 +1,16 @@
 -module(cs).
 -compile(export_all).
 
+stringEquality() ->
+  string:equal("ABC", "abc").
+
+
 console_print() ->
   io:format("~s~n", ["hello"]),
   io:format("~p~n", [[1, 2, 3]]).
+
+concat_bin_strings() ->
+  list_to_binary([<<"foo">>, <<"bar">>]).
 
 lists() ->
   lists:seq(1, 10),
@@ -22,7 +29,7 @@ list_comp_filter() ->
 
 list_comp_filter2() ->
   %filtering generators
-  Weather = [{toronto, rain}, {montreal, storms}, {london, fog}, {paris, sun}, {boston, fog}, {vancouver, snow}],
+  Weather = [{london, fog}, {paris, sun}, {boston, fog}, {vancouver, snow}],
   FoggyPlaces = [X || {X, fog} <- Weather],
   FoggyPlaces.
 %% [london,boston]
@@ -36,16 +43,13 @@ list_subtract() ->
   B = lists:seq(1, 4),
   C = lists:subtract(A, B),
 %% [5,6,7,8]
-A -- B.
+  A -- B,
 %% [5,6,7,8]
-[a,b,c,d] --[a,b,c].
+  [a, b, c, d] --[a, b, c],
 %% [d]
-[a,b,c] -- [a,b,c,d].
+  [a, b, c] -- [a, b, c, d].
 %% []
 
-list_foldright() ->
-  A = lists:seq(1, 8),
-  B = lists:seq(1, 4),
 
 processes() ->
   spawn(fun() -> io:format("~p~n", [2 + 2]) end).
