@@ -1,19 +1,11 @@
 -module(cs).
 -compile(export_all).
 
-stringEquality() ->
-  string:equal("ABC", "abc").
-
-string_binaryToChars(L) ->
-  C = [X || <<X:1/binary>> <= L].
-
-
 console_print() ->
   io:format("~s~n", ["hello"]),
   io:format("~p~n", [[1, 2, 3]]).
 
-concat_bin_strings() ->
-  list_to_binary([<<"foo">>, <<"bar">>]).
+
 
 lists() ->
   lists:seq(1, 10),
