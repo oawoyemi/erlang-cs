@@ -123,3 +123,7 @@ anonymous_vars() ->
   xml_sax() ->
     {ok, Xml} = file:read_file("sotest.xml"),
     erlsom:parse_sax(Xml, [], fun(Event, Acc) -> io:format("~p~n", [Event]), Acc end).
+
+    xml_sax2() ->
+      CountEntries = fun(Event, Acc) -> case Event of {startElement, _, "entry", _, _} -> Acc + 1; _ -> Acc end end,
+      erlsom:parse_sax(Xml, 0, CountEntries).
