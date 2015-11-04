@@ -119,3 +119,7 @@ anonymous_vars() ->
   %% They are however ignored by the compiler in the sense that they do not generate any warnings for unused variables.
   [H | _T] = [1, 2, 3],
   H.
+
+  xml_sax() ->
+    {ok, Xml} = file:read_file("sotest.xml"),
+    erlsom:parse_sax(Xml, [], fun(Event, Acc) -> io:format("~p~n", [Event]), Acc end).
