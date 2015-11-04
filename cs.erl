@@ -1,6 +1,7 @@
 -module(cs).
 -compile(export_all).
 
+file() -> {ok ,Xml} = file:read_file("x.xml").
 s() ->
     lists:seq(1,10).
 
@@ -25,6 +26,11 @@ process_links() ->
   % When that relationship is set up and one of the processes dies from an unexpected throw,
   % error or exit (see Errors and Exceptions),
   ok.
+process_monitor() ->
+  erlang:monitor(process, spawn(fun() -> timer:sleep(500) end)).
+% #Ref<0.0.4.29>
+%2> flush().
+% Shell got {'DOWN',#Ref<0.0.4.29>,process,<0.35.0>,normal}
 tc() ->
   %type conversion
   binary_to_atom(<<"Erlang">>, utf8).
