@@ -21,20 +21,20 @@ comps() ->
     [2 * N || N <- [1, 2, 3, 4]].
 %% [2,4,6,8]
 
-comp_filter() ->
+comprehension_filter() ->
     [X || X <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], X rem 2 =:= 0],
 %% [2,4,6,8,10]
-    [X || [X] <- [[1], [2], [3], 4]].
+    [X || [X] <- [[1], [2], [3], 4]],
 %% [1,2,3]
-
-comp_filter2() ->
+    [X || [_, X] <- [[1, a], [2, b], [3]], not lists:member(X, [a])],
+%% [b]
     %filtering generators
     Weather = [{london, fog}, {paris, sun}, {boston, fog}, {vancouver, snow}],
     FoggyPlaces = [X || {X, fog} <- Weather],
     FoggyPlaces.
 %% [london,boston]
 
-comp_multiple_generators() ->
+comprehension_multiple_generators() ->
     [X + Y || X <- [1, 2], Y <- [2, 3]].
 %%
 
