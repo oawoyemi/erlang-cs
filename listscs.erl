@@ -1,4 +1,4 @@
--module(listX).
+-module(listscs).
 -compile(export_all).
 
 
@@ -6,8 +6,7 @@ list() ->
     lists:seq(1, 10),
     lists:map(fun(X) -> X * 10 end, [1, 2, 3]),  %[10,20,30]
     lists:flatmap(fun(X) -> [X * 10] end, [1, 2, 3]),
-    lists:filter(fun(X) -> lists:member(X, [1,2,3,4]) end, [1,2,3]).%[1,2,3]
-
+    lists:filter(fun(X) -> lists:member(X, [1, 2, 3, 4]) end, [1, 2, 3]).%[1,2,3]
 
 a() ->
     T = [{<<"foo">>, foo}, {<<"bar">>, bar}],
@@ -23,8 +22,10 @@ comps() ->
 %% [2,4,6,8]
 
 comp_filter() ->
-    [X || X <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], X rem 2 =:= 0].
+    [X || X <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], X rem 2 =:= 0],
 %% [2,4,6,8,10]
+    [X || [X] <- [[1], [2], [3], 4]].
+%% [1,2,3]
 
 comp_filter2() ->
     %filtering generators
