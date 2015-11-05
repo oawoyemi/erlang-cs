@@ -1,9 +1,54 @@
 -module(cs).
 -compile(export_all).
 
+file() -> {ok ,Xml} = file:read_file("x.xml").
+
+
 console_print() ->
     io:format("~s~n", ["hello"]),
     io:format("~p~n", [[1, 2, 3]]).
+
+
+
+
+lists() ->
+  lists:seq(1, 10),
+  lists:map(fun(X) -> X * 10 end, [1, 2, 3]),  %[10,20,30]
+  lists:flatmap(fun(X) -> [X * 10] end, [1, 2, 3]).
+
+list_comps1() ->
+%%   NewList = [Expression || Pattern <- List, Condition1, Condition2, ... ConditionN]
+
+  [2 * N || N <- [1, 2, 3, 4]].
+%% [2,4,6,8]
+
+list_comp_filter() ->
+  [X || X <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], X rem 2 =:= 0].
+%% [2,4,6,8,10]
+
+list_comp_filter2() ->
+  %filtering generators
+  Weather = [{london, fog}, {paris, sun}, {boston, fog}, {vancouver, snow}],
+  FoggyPlaces = [X || {X, fog} <- Weather],
+  FoggyPlaces.
+%% [london,boston]
+
+list_comp_multiple_generators() ->
+  [X + Y || X <- [1, 2], Y <- [2, 3]].
+%%
+
+list_subtract() ->
+  A = lists:seq(1, 8),
+  B = lists:seq(1, 4),
+  C = lists:subtract(A, B),
+%% [5,6,7,8]
+  A -- B,
+%% [5,6,7,8]
+  [a, b, c, d] --[a, b, c],
+%% [d]
+  [a, b, c] -- [a, b, c, d].
+%% []
+
 
 processes() ->
     spawn(fun() -> io:format("~p~n", [2 + 2]) end).
@@ -22,6 +67,13 @@ process_links() ->
     %  except they can convert exit signals to regular messages.
     % This is done by calling process_flag(trap_exit, true) in a running process.
     ok.
+
+process_monitor() ->
+  erlang:monitor(process, spawn(fun() -> timer:sleep(500) end)).
+% #Ref<0.0.4.29>
+%2> flush().
+% Shell got {'DOWN',#Ref<0.0.4.29>,process,<0.35.0>,normal}
+
 
 references() ->
     Ref = make_ref(),
@@ -68,3 +120,12 @@ anonymous_vars() ->
     %% They are however ignored by the compiler in the sense that they do not generate any warnings for unused variables.
     [H | _T] = [1, 2, 3],
     H.
+
+  xml_sax() ->
+    {ok, Xml} = file:read_file("x.xml"),
+    erlsom:parse_sax(Xml, [], fun(Event, Acc) -> io:format("~p~n", [Event]), Acc end).
+
+    xml_sax2() ->
+        {ok, Xml} = file:read_file("x.xml"),
+      CountEntries = fun(Event, Acc) -> case Event of {startElement, _, "entry", _, _} -> Acc + 1; _ -> Acc end end,
+      erlsom:parse_sax(Xml, 0, CountEntries).
