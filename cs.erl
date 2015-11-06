@@ -1,54 +1,17 @@
 -module(cs).
 -compile(export_all).
 
+
+eq() ->
+    1 =:= 1.0, % false
+    1 == 1.0. % true
+
 file() -> {ok ,Xml} = file:read_file("x.xml").
 
 
 console_print() ->
     io:format("~s~n", ["hello"]),
     io:format("~p~n", [[1, 2, 3]]).
-
-
-
-
-lists() ->
-  lists:seq(1, 10),
-  lists:map(fun(X) -> X * 10 end, [1, 2, 3]),  %[10,20,30]
-  lists:flatmap(fun(X) -> [X * 10] end, [1, 2, 3]).
-
-list_comps1() ->
-%%   NewList = [Expression || Pattern <- List, Condition1, Condition2, ... ConditionN]
-
-  [2 * N || N <- [1, 2, 3, 4]].
-%% [2,4,6,8]
-
-list_comp_filter() ->
-  [X || X <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], X rem 2 =:= 0].
-%% [2,4,6,8,10]
-
-list_comp_filter2() ->
-  %filtering generators
-  Weather = [{london, fog}, {paris, sun}, {boston, fog}, {vancouver, snow}],
-  FoggyPlaces = [X || {X, fog} <- Weather],
-  FoggyPlaces.
-%% [london,boston]
-
-list_comp_multiple_generators() ->
-  [X + Y || X <- [1, 2], Y <- [2, 3]].
-%%
-
-list_subtract() ->
-  A = lists:seq(1, 8),
-  B = lists:seq(1, 4),
-  C = lists:subtract(A, B),
-%% [5,6,7,8]
-  A -- B,
-%% [5,6,7,8]
-  [a, b, c, d] --[a, b, c],
-%% [d]
-  [a, b, c] -- [a, b, c, d].
-%% []
-
 
 processes() ->
     spawn(fun() -> io:format("~p~n", [2 + 2]) end).
@@ -127,5 +90,13 @@ anonymous_vars() ->
 
     xml_sax2() ->
         {ok, Xml} = file:read_file("x.xml"),
+        PrintTitles1 = fun(Event,_) -> case Event of {characters, Title} -> io:format("~p~n", [Title]); _ -> "" end end,
       CountEntries = fun(Event, Acc) -> case Event of {startElement, _, "entry", _, _} -> Acc + 1; _ -> Acc end end,
       erlsom:parse_sax(Xml, 0, CountEntries).
+
+vale() ->
+    {startElement,"http://www.w3.org/2005/Atom","title",[],
+     [{attribute,"type",[],[],"text"}]}
+     {characters,"Error while filling subscription list for ejabberd 15.07"}
+{endElement,"http://www.w3.org/2005/Atom","title",[]}
+
