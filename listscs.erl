@@ -1,6 +1,13 @@
 -module(listscs).
 -compile(export_all).
 
+proplists() ->
+%%    They're more of a common pattern that appears when using lists and tuples to represent some object or item
+    L = [{a, 1}, {b, 2}, {c, 3}, {d, 4}],
+    proplists:get_value(a, L), % 1
+    proplists:get_value(b, L), % 2
+    proplists:get_value(e, L), % undefined
+    proplists:get_value(e, L, undefined). % undefined
 
 list() ->
     lists:seq(1, 10),
