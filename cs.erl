@@ -6,10 +6,14 @@ console_print() ->
   io:format("~p~n", [[1, 2, 3]]).
 
 eq() ->
-    1 =:= 1.0, % false
+    _X = 1 =:= 1.0, % false
     1 == 1.0. % true
 
-file() -> {ok ,Xml} = file:read_file("x.xml").
+eq(N) when N == 1 ->
+    true.
+
+file() ->
+    {ok, _Xml} = file:read_file("x.xml").
 
 processes() ->
     spawn(fun() -> io:format("~p~n", [2 + 2]) end).
@@ -62,7 +66,7 @@ references() ->
 
 type_conversion() ->
     %type conversion
-    erlang:atom_to_binary(atom, utf8), %<<"atom">>
+    _BS = erlang:atom_to_binary(atom, utf8), %<<"atom">>
     binary_to_atom(<<"Erlang">>, utf8).
 % 'Erlang'
 
@@ -86,15 +90,18 @@ anonymous_vars() ->
     {ok, Xml} = file:read_file("x.xml"),
     erlsom:parse_sax(Xml, [], fun(Event, Acc) -> io:format("~p~n", [Event]), Acc end).
 
-    xml_sax2() ->
-        {ok, Xml} = file:read_file("x.xml"),
-        PrintTitles1 = fun(Event,_) -> case Event of {characters, Title} -> io:format("~p~n", [Title]); _ -> "" end end,
-      CountEntries = fun(Event, Acc) -> case Event of {startElement, _, "entry", _, _} -> Acc + 1; _ -> Acc end end,
-      erlsom:parse_sax(Xml, 0, CountEntries).
+xml_sax2() ->
+    {ok, Xml} = file:read_file("x.xml"),
+    PrintTitles1 = fun(Event, _) ->
+        case Event of {characters, Title} ->
+            io:format("~p~n", [Title]); _ ->
+            "" end end,
+    CountEntries = fun(Event, Acc) ->
+        case Event of {startElement, _, "entry", _, _} ->
+            Acc + 1; _ ->
+            Acc end end,
+    erlsom:parse_sax(Xml, 0, CountEntries),
+    erlsom:parse_sax(Xml, 0, PrintTitles1).
 
-vale() ->
-    {startElement,"http://www.w3.org/2005/Atom","title",[],
-     [{attribute,"type",[],[],"text"}]}
-     {characters,"Error while filling subscription list for ejabberd 15.07"}
-{endElement,"http://www.w3.org/2005/Atom","title",[]}
+
 
