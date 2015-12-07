@@ -9,7 +9,7 @@ proplists() ->
     proplists:get_value(e, L), % undefined
     proplists:get_value(e, L, undefined). % undefined
 
-list() ->
+list_hof() ->
     lists:seq(1, 10),
     lists:map(fun(X) -> X * 10 end, [1, 2, 3]),  %[10,20,30]
     lists:flatmap(fun(X) -> [X * 10] end, [1, 2, 3]),
