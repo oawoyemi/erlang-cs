@@ -13,7 +13,7 @@ list_hof() ->
     lists:seq(1, 10),
     lists:map(fun(X) -> X * 10 end, [1, 2, 3]),  %[10,20,30]
     lists:flatmap(fun(X) -> [X * 10] end, [1, 2, 3]),
-    lists:filter(fun(X) -> lists:member(X, [1, 2, 3, 4]) end, [1, 2, 3]).%[1,2,3]
+    lists:filter(fun(X) -> lists:member(X, [1, 2, 3, 4]) end, [1, 2, 3, 5]).%[1,2,3]
 
 a() ->
     T = [{<<"foo">>, foo}, {<<"bar">>, bar}],
