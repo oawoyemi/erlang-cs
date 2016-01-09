@@ -102,3 +102,14 @@ xml_sax2() ->
             Acc end end,
     erlsom:parse_sax(Xml, 0, CountEntries),
     erlsom:parse_sax(Xml, 0, PrintTitles1).
+
+retry(F, MaxTries, Backoff) ->
+    retry(F, MaxTries, Backoff, F()).
+
+retry(_F, 0, _Backoff, _R) ->
+    fail;
+retry(_F, _Count, _Backoff, {V, ok}) ->
+    V;
+retry(F, Count, Backoff, _R) ->
+    timer:sleep(Backoff),
+    retry(F, Count - 1, Backoff,  F()).
