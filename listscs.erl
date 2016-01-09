@@ -1,6 +1,10 @@
 -module(listscs).
 -compile(export_all).
 
+head_tail() ->
+    hd([1,2,3,4]) = 1,
+    tl([1,2,3,4]) = [2,3,4].
+
 proplists() ->
 %%    They're more of a common pattern that appears when using lists and tuples to represent some object or item
     L = [{a, 1}, {b, 2}, {c, 3}, {d, 4}],

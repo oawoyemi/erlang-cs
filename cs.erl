@@ -4,7 +4,7 @@
 console_print() ->
   io:format("~s~n", ["hello"]),
   io:format("~p~n", [[1, 2, 3]]).
-
+% (==) compares values; the latter (=:=) compares values and types
 eq() ->
     _X = 1 =:= 1.0, % false
     1 == 1.0. % true
@@ -102,6 +102,3 @@ xml_sax2() ->
             Acc end end,
     erlsom:parse_sax(Xml, 0, CountEntries),
     erlsom:parse_sax(Xml, 0, PrintTitles1).
-
-
-
