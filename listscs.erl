@@ -1,9 +1,45 @@
 -module(listscs).
 -compile(export_all).
 
+binaries() ->
+    H = <<"hello">>, W = <<"world">>,
+    <<"hello world">> = <<H/binary," ", W/binary>>,
+    <<1,2,4>> = << <<X>> || X <- [1,2,3] >>,
+    [ X || <<X>> <= <<1,2,3>> ], %[1,2,3]
+    [ X || <<X:32/big-signed-integer>> <= <<0,0,0,1,0,0,0,2>>], % [1,2]
+
+% map atom list to escaped binary string
+    A = [blah, hey, atom, 'load-b'],
+    lists:foldl(fun(X, Acc)->
+                        Z = erlang:atom_to_binary(X,utf8),
+                        E = <<"\"", Z/binary, "\",">>, <<Acc/binary,E/binary>>
+                end,
+                <<"[">>, A).
+
+%% more concise
+atoms_to_escaped_string2(F) ->
+string:join(["\"" ++ atom_to_list(X) ++ "\"" || X <- L], ",").
+
+%% more concise version above
+atom_to_escaped_string(L) ->
+    atom_to_escaped_string(L, []).
+
+atom_to_escaped_string([], Acc) ->
+    lists:reverse(Acc);
+atom_to_escaped_string([A], Acc)  ->
+    S = ["\"",atom_to_list(A),"\""],
+    atom_to_escaped_string([], [S|Acc]);
+atom_to_escaped_string([H|T], Acc) ->
+    A = ["\"",atom_to_list(H),"\","],
+    atom_to_escaped_string(T, [A|Acc]).
+
+
+%    F = fun(X)-> S = erlang:atom_to_list(X), E = io_lib:format("\"~s\"",[S], Y = list_to_binary(E)) end,
+ %   lists:map(F, A).
+
 head_tail() ->
-    hd([1,2,3,4]) = 1,
-    tl([1,2,3,4]) = [2,3,4].
+    1 = hd([1,2,3,4]),
+    [2,3,4] = tl([1,2,3,4]).
 
 proplists() ->
 %%    They're more of a common pattern that appears when using lists and tuples to represent some object or item
@@ -52,7 +88,7 @@ comprehension_multiple_generators() ->
 subtract() ->
     A = lists:seq(1, 8),
     B = lists:seq(1, 4),
-    C = lists:subtract(A, B),
+    lists:subtract(A, B),
 %% [5,6,7,8]
     A -- B,
 %% [5,6,7,8]
