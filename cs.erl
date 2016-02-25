@@ -1,6 +1,15 @@
 -module(cs).
 -compile(export_all).
 
+
+try_catch(X) ->
+    try
+        string:to_integer(X)
+    catch
+        _:_ ->
+            X
+    end.
+
 console_print() ->
   io:format("~s~n", ["hello"]),
   io:format("~p~n", [[1, 2, 3]]).
@@ -15,10 +24,26 @@ eq(N) when N == 1 ->
 file() ->
     {ok, _Xml} = file:read_file("x.xml").
 
+register_process_names() ->
+    true = register(tdd, self()),
+    tdd ! blimey,
+    flush(),
+    %% Shell got blimey
+    Pid = spawn(fun()-> receive {X, From} -> From ! "thanks!!!" end end),
+    %% <0.40.0>
+    true = register(pr, Pid),
+    pr ! "hey",
+    %% "hey"
+    pr ! {hey, self()},
+    %% {hey,<0.32.0>}
+    flush().
+%% Shell got "thanks!!!"
+
 processes() ->
     spawn(fun() -> io:format("~p~n", [2 + 2]) end).
 
-
+list_registered_processes() ->
+    rp(registered()).
 
 process_links() ->
     %A link is a specific kind of relationship that can be created between two processes.
@@ -80,7 +105,7 @@ messages() ->
     %If the second message matches, the first message is put back on top of the mailbox to be retried later.
     ok.
 
-anonymous_vars() ->
+unused_vars() ->
     %% Variables starting with underscore (_), for example, _Height, are normal variables, not anonymous.
     %% They are however ignored by the compiler in the sense that they do not generate any warnings for unused variables.
     [H | _T] = [1, 2, 3],
