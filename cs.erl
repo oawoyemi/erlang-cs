@@ -1,3 +1,14 @@
+
+%% Here we have written down the intention that the file might not exist. However:
+%% We only worry about non existence.
+%% We crash on eaccess which means an access error due to permissions.
+%% Likewise for eisdir, enotdir, enospc.
+case file:open(Filename, [raw, read, binary]) of
+    {ok, Fd} -> ...;
+    {error, enoent} -> ...
+ end,
+
+
 %% rebar3 - rebar3 getting started
 %% rebar3 new app <app_name>
 %% add hex plugin: {plugins, [rebar3_hex]}.
