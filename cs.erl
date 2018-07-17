@@ -1,4 +1,6 @@
 
+%% https://gist.github.com/aabs/45518ff1c30b51bdf9dca428136e0f56
+
 %% Here we have written down the intention that the file might not exist. However:
 %% We only worry about non existence.
 %% We crash on eaccess which means an access error due to permissions.
