@@ -1,3 +1,9 @@
+
+%% returns a list of all processes currently know to the
+processes()
+
+system.process_info(Pid) %% returns a dictionary containing information about
+
 %%print all registered processes in the console without truncation
 rp(registered()).
 

@@ -10,30 +10,11 @@ case file:open(Filename, [raw, read, binary]) of
     {error, enoent} -> ...
  end,
 
-
-%% rebar3 - rebar3 getting started
-%% rebar3 new app <app_name>
-%% add hex plugin: {plugins, [rebar3_hex]}.
-%% rebar3 update
-%% rebar3 shell
-application:start(<app_name>).
-application:stop(<app_name>).
-
 %% tests
 https://github.com/richcarl/eunit/blob/master/examples/eunit_examples.erl
 
-%% processes
-
-%%registered/named processes for a node erlang:processes() %%list all Pids on a node
-rp(registered()).
-
 
 %% Advanced info http://www.erlang.org/course/advanced.html#dict
-%% returns a list of all processes currently know to the
-processes()
-system.process_info(Pid) %% returns a dictionary containing information about
-Pid.Module:module_info() %% returns a dic tionary containing information about
-%% the code in module Module.
 
 
 %% monadish

@@ -1,0 +1,20 @@
+* debugging
+
+
+#+BEGIN_SRC erlang
+  Module:module_info() %% returns a dic tionary containing information about
+  %% the code in module Module.
+
+  %% dbg:tpl - This function works as tp/2, but enables tracing for local calls (and local functions)
+  %% as well as for global calls (and functions).
+
+  dbg:start().   % start dbg
+  dbg:tracer().  % start a simple tracer process
+  dbg:p(all, c).   % trace calls (c) of that MFA for all processes.
+  dbg:tp(Module, Function, Arity, []).   % specify MFA you are interested in or '_' for all FA
+  dbg:tpl(Module, '_', []).
+  dbg:tpl(x_api, '_', '_', [{'_', [], [{return_trace}]}]).
+  dbg:stop_clear().
+
+  debugger:start(). % start debugger ui
+#+END_SRC

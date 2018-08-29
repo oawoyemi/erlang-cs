@@ -1,5 +1,32 @@
+* rebar3 getting started
+
+
+  >rebar3 new app <appname>
+  add hex plugin: {plugins, [rebar3_hex]}.
+  >rebar3 update
+  >rebar3 shell
+  >application:start(<app_name>).
+  >application:stop(<app_name>).
+
+
+  reference:  https://medium.com/erlang-central/building-your-first-erlang-app-using-rebar3-25f40b109aad
+* rebar shell # start rebar as if -pa ebin & deps
+
+** Global options:
+# verbose=1 - show output from the common_test run as it goes
+# suites="foo,bar" - run <test>/foo_SUITE and <test>/bar_SUITE
+#case="mycase" - run individual test case foo_SUITE:mycase
+
+rebar eunit skip_deps=true suite="my_module_tests"
+
+
+** list registered processes
+rp(registered()).
+
+* rebar.config
 https://github.com/rebar/rebar/blob/master/rebar.config.sample
 
-If you want to avoid this step every time you create a new Erlang app, add the entry to a global rebar.config and place it at:
+If you want to avoid this step every time you create a new Erlang app, add the
+entry to a global rebar.config and place it at:
 
 ~/.config/rebar3/rebar.config
