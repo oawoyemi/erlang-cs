@@ -63,12 +63,12 @@ a() ->
 
 
 %%   NewList = [Expression || Pattern <- List, Condition1, Condition2, ... ConditionN]
-comps() ->
+list_comps() ->
 
     [2 * N || N <- [1, 2, 3, 4]].
 %% [2,4,6,8]
 
-comprehension_filter() ->
+list_comprehension_filter() ->
     [X || X <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], X rem 2 =:= 0],
 %% [2,4,6,8,10]
     [X || [X] <- [[1], [2], [3], 4]],
@@ -81,11 +81,11 @@ comprehension_filter() ->
     FoggyPlaces.
 %% [london,boston]
 
-comprehension_multiple_generators() ->
+list_comprehension_multiple_generators() ->
     [X + Y || X <- [1, 2], Y <- [2, 3]].
 %%
 
-subtract() ->
+list_diff() ->
     A = lists:seq(1, 8),
     B = lists:seq(1, 4),
     lists:subtract(A, B),
@@ -96,3 +96,8 @@ subtract() ->
 %% [d]
     [a, b, c] -- [a, b, c, d].
 %% []
+
+%% linear time operation
+list_length() ->
+  L = [x,y],
+  length(L).

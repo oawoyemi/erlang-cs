@@ -127,7 +127,7 @@ ome_test2_() ->
      fun start/0,
      fun stop/1,
      [fun some_instantiator1/1,
-      fun some_instantiator2/1,  
+      fun some_instantiator2/1,
       ...
 	  fun some_instantiatorN/1]}.
 
@@ -280,7 +280,7 @@ Orddicts are a generally good compromise between complexity and efficiency up to
 Starting with version 17.0, the language supports a new native key-value data type, described in ```Postscript: Maps```.  They should be the new de-facto replacement for dicts.
 
 ## Error handling
-You can also manually get a stack trace by calling 		
+You can also manually get a stack trace by calling
 ```erlang
  erlang:get_stacktrace/0
 ```
@@ -288,7 +288,7 @@ You can also manually get a stack trace by calling
 'Else' or 'true' branches should be "avoided" altogether: ifs are usually easier to read when you cover all logical ends rather than relying on a "catch all" clause.
 replace:
 ```erlang
-    % bad practice      % more idiomatic  
+    % bad practice      % more idiomatic
 	if X > Y -> a()		if X > Y  -> a()
 	 ; true  -> b()		 ; X =< Y -> b()
 	end		     	    end
@@ -468,4 +468,3 @@ kerl build 18.1 18.1
 
 
 erlang:system_info(otp_release).
-

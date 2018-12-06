@@ -1,10 +1,10 @@
 * debugging
-
-
+** connect to running node
+ erl -sname debug -remsh du_auth@duauth-5c7bf4dd8c-zn6w7 -setcookie du_auth_cookie
+** module info & debug tracing
 #+BEGIN_SRC erlang
   Module:module_info() %% returns a dic tionary containing information about
   %% the code in module Module.
-
   %% dbg:tpl - This function works as tp/2, but enables tracing for local calls (and local functions)
   %% as well as for global calls (and functions).
 
@@ -40,11 +40,8 @@
  # verbose=1 - show output from the common_test run as it goes
  # suites="foo,bar" - run <test>/foo_SUITE and <test>/bar_SUITE
  # case="mycase" - run individual test case foo_SUITE:mycase
-
- rebar eunit skip_deps=true suite="my_module_tests"
-
-*** list registered processes
- rp(registered()).
+** run tests for specific module
+rebar3 eunit --module=my_module
 
 ** rebar.config
  https://github.com/rebar/rebar/blob/master/rebar.config.sample
@@ -53,3 +50,11 @@
  entry to a global rebar.config and place it at:
 
  ~/.config/rebar3/rebar.config
+* list registered processes
+ rp(registered()).
+
+* By setting RELX_REPLACE_OS_VARS=true
+
+   export RELX_REPLACE_OS_VARS=true
+
+   both vm.args and sys.config files may contain OS environment variables that will be replaced
