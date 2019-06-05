@@ -17,7 +17,7 @@ binaries() ->
                 <<"[">>, A).
 
 %% more concise
-atoms_to_escaped_string2(F) ->
+atoms_to_escaped_string2(L) ->
 string:join(["\"" ++ atom_to_list(X) ++ "\"" || X <- L], ",").
 
 %% more concise version above

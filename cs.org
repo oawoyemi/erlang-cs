@@ -1,6 +1,8 @@
 * debugging
 ** connect to running node
- erl -sname debug -remsh du_auth@duauth-5c7bf4dd8c-zn6w7 -setcookie du_auth_cookie
+# use -name for fully qualified hostname
+# the modes must match for the running node and remsh i.e. sname->sname or name->name
+erl -sname debug -remsh <node>@<host> -setcookie some_cookie
 ** module info & debug tracing
 #+BEGIN_SRC erlang
   Module:module_info() %% returns a dic tionary containing information about
@@ -18,7 +20,9 @@
 
   debugger:start(). % start debugger ui
 #+END_SRC
-* rebar
+** run shell with sync
+./rebar3 shell --apps <other_app>,sync
+* rebar3
 ** releases
    rebar3 release
    _build/default/rel/bsc/bin/bsc console
@@ -50,6 +54,8 @@ rebar3 eunit --module=my_module
  entry to a global rebar.config and place it at:
 
  ~/.config/rebar3/rebar.config
+** dynamic configuration
+http://erlware.org/otp-21-new-sys_config_src-option-in-relx/
 * list registered processes
  rp(registered()).
 
@@ -58,3 +64,8 @@ rebar3 eunit --module=my_module
    export RELX_REPLACE_OS_VARS=true
 
    both vm.args and sys.config files may contain OS environment variables that will be replaced
+
+* additional libs (ERL_LIBS)
+  Environment variable ERL_LIBS (if defined) is to contain a colon-separated
+  (for Unix-like systems) or semicolon-separated (for Windows) list of
+  additional libraries.

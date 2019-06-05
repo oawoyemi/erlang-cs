@@ -1,5 +1,8 @@
 -module(cs).
 -compile(export_all).
+
+-include_lib("eunit/include/eunit.hrl").
+
 %% https://gist.github.com/aabs/45518ff1c30b51bdf9dca428136e0f56
 
 let_it_crash() ->
@@ -14,6 +17,10 @@ let_it_crash() ->
 
 %% tests
 %% https://github.com/richcarl/eunit/blob/master/examples/eunit_examples.erl
+
+eunit_debugging() ->
+  ?debugMsg("Function fun1 starting..."),
+  ?debugFmt("Function fun1 starting...", []).
 
 
 %% Advanced info http://www.erlang.org/course/advanced.html#dict
@@ -35,6 +42,18 @@ compose(F,G) -> fun(X) -> F(G(X)) end.
 multicompose(Fs) ->
     lists:foldl(fun compose/2, fun(X) -> X end, Fs).
 
+funs() ->
+%% Multiple clauses in anonymous functions
+_F = fun(first) -> io:format("This was the first clause");
+       (second) -> io:format("This was the second clause")
+    end.
+
+https() ->
+  SSLOptions = [{cacertfile, "/path/to/cert/file"}],
+  Options = [{ssl_options, SSLOptions}],
+  %% ... define Method, URL, Headers and Payload ...
+  hackney:request(Method, URL, _Headers, Payload, Options).
+
 write_http_body_to_file() ->
 {ok, {_Status, _Headers, Body}} = httpc:request("http://testing.com/123"),
 Data = list_to_binary(Body),
@@ -52,6 +71,11 @@ case_expression_guards(X) ->
 etstables() ->
 
 TabId = ets:new(tab,[named_table]),
+  %% Option read_concurrency can be combined with option write_concurrency. You
+  %% typically want to combine these when large concurrent read bursts and large
+  %% concurrent write bursts are common.
+  %% protected - owner process can read and write to the table. Other processes can only read the table.
+ets:new(tab_read_conc,[named_table, protected, {read_concurrency, true}]),
     ets:tab2list(TabId),%% return all rows as list
 
 
@@ -127,6 +151,12 @@ type_conversion() ->
     binary_to_atom(<<"Erlang">>, utf8).
 % 'Erlang'
 
+operators() ->
+  %% =:=	Exactly equal to
+  %% =/=	Exactly not equal to
+  %% ==	Equal to
+  %% /=	Not equal to
+  ok.
 infix() ->
     % infix append operator
     [1] ++ [2] ++ [3].
@@ -135,26 +165,27 @@ infix() ->
 messages() ->
     %When there is no way to match a given message, it is put in a save queue and the next message is tried.
     %If the second message matches, the first message is put back on top of the mailbox to be retried later.
+.
 
-
-
+vars() _->
 %% Variables starting with underscore (_), for example, _Height, are normal variables.
 %% They are however ignored by the compiler in the sense that they do not generate any warnings for unused variables.
 [H | _T] = [1, 2, 3],
 H.
 
+dicts() ->
 
+  D = lists:foldl(fun(V, Dict) -> Dict:append(a, V) end, dict:new(), [1,2,3]),
+dict:to_list(D),
 
-%% dicts
-D = lists:foldl(fun(V, Dict) -> Dict:append(a, V) end, dict:new(), [1,2,3]).
-dict:to_list(D).
 %%> [{a,[1,2,3]}]
-D0 = lists:foldl(fun(V, Dict) -> Dict:append(b, V) end, D, [1,2,3]).
+D0 = lists:foldl(fun(V, Dict) -> Dict:append(b, V) end, D, [1,2,3]),
+
 dict:to_list(D0).
 %%> [{a,[1,2,3]},{b,[1,2,3]}]
 
 %% more concise
-atoms_to_escaped_string2(F) ->
+atoms_to_escaped_string2(L) ->
 string:join(["\"" ++ atom_to_list(X) ++ "\"" || X <- L], ",").
 
 %% more concise version above
@@ -170,7 +201,16 @@ atom_to_escaped_string([H|T], Acc) ->
     A = ["\"",atom_to_list(H),"\","],
     atom_to_escaped_string(T, [A|Acc]).
 
+guards() ->
+  %% Guard1;...;GuardK
+  %%  the guard is true if all guard expressions evaluate to true.;
 
+  %% GuardExpr1,...,GuardExprN
+  %% separated by comma (,). The guard is true if all guard expressions evaluate to true.
+
+  %% only andalso and orelse can be nested inside guards. This means (A orelse B) andalso C is a valid guard, while (A; B), C
+
+ok.
 %    F = fun(X)-> S = erlang:atom_to_list(X), E = io_lib:format("\"~s\"",[S], Y = list_to_binary(E)) end,
  %   lists:map(F, A).
 
@@ -178,10 +218,22 @@ head_tail() ->
     1 = hd([1,2,3,4]),
     [2,3,4] = tl([1,2,3,4]).
 
+apply_mfa() ->
+  erlang:apply(fun lists:append/2, [[1],[2]]), %% [1.2]
+
+  %% deprecated
+  erlang:apply(lists,append,[[1],[2]]). %% [1,2]
+
+timestamp() ->
+  os.system_time(millisecond).
 
 list_hof() ->
 
-    lists:filter(fun(X) -> lists:member(X, [1, 2, 3, 4]) end, [1, 2, 3, 5]).%[1,2,3]
+  lists:filter(fun(X) -> lists:member(X, [1, 2, 3, 4]) end, [1, 2, 3, 5]),%[1,2,3]
+
+  Big = fun(X) -> X>10 end,
+  lists:all(Big, [1,2,3]), % false
+  lists:all(Big, [13,11]). % true
 
 a() ->
     T = [{<<"foo">>, foo}, {<<"bar">>, bar}],
@@ -189,6 +241,8 @@ a() ->
     InTypes = fun(X) -> lists:member(X, T) end,
     lists:filter(fun(R) -> [] == lists:filter(InTypes, R) end, O).
 
+lists_concat() ->
+    [a,b|[c,d]]. %% [a,b,c,d]
 
 %%   NewList = [Expression || Pattern <- List, Condition1, Condition2, ... ConditionN]
 comps() ->
@@ -231,10 +285,10 @@ binary_processing() ->
     [ X || <<X:32/big-signed-integer>> <= <<0,0,0,1,0,0,0,2>>], % [1,2]
 
  %% extract the first 32 bits from the binary, complete matching statement:
-<<B1:32, _/binary>> = B.
+  <<_B1:32, _/binary>> = B.
 
 % map atom list to escaped binary string
-    A = [blah, hey, atom, 'load-b'],
+A = [blah, hey, atom, 'load-b'],
     lists:foldl(fun(X, Acc)->
                         E = <<"\"", (atom_to_binary(X, utf8))/binary, "\",">>, <<Acc/binary,E/binary>>
                 end,
@@ -242,6 +296,9 @@ binary_processing() ->
 
  binaryToChars(L) ->
      _C = [X || <<X:1/binary>> <= L].
+
+integer_to_binary() ->
+<<"8443">> = erlang:integer_to_binary(8443).
 
 concat_binary() ->
     list_to_binary([<<"foo">>, <<"bar">>]).
@@ -263,14 +320,24 @@ lists:keystore(<<"blah">>, 1, E, {<<"blah">>,x}).
  %%{<<"details">>,<<"status is great">>},
  %%{<<"blah">>,x}]
 
+partition() ->
+  R = [{"/internal/a",couch_stats_http_handler,[]},
+   {"/internal/b",du_auth_version_h,[]},
+   {"/internal/c",du_auth_healthcheck_h,[]},
+   {"/_sync",du_auth_sync_h,[]},
+   {"/endpoint/:id",du_auth_credentials_h,[]},
+   {"/blah",du_auth_auth_h,[]}],
+  lists:partition(fun({X,_,_}) -> string:find(X, "/internal/") =:= X end, R),
 %% partition lists into sublists and a remainder by key
+
 proplists:split([{a,1}, {b, 5}, {c,1}, {d,6}], [a, b]). %{[[{a,1}],[{b,5}]],[{c,1},{d,6}]}
 
 %% merge 2 proplists
 merge_proplists(OldPlist, NewPlist) ->
-    orddict:merge(fun(_K, _Old, New) -> New end,
-                  orddict:from_list(OldPlist),
-                  orddict:from_list(NewPlist)).
+  orddict:merge(fun(_K, _Old, New) -> New end,
+                orddict:from_list(OldPlist),
+                orddict:from_list(NewPlist)).
+
 proplists() ->
 %%    They're more of a common pattern that appears when using lists and tuples to represent some object or item
     L = [{a, 1}, {b, 2}, {c, 3}, {d, 4}],

@@ -27,7 +27,8 @@ fizzbuzz([H | T], Acc, false) when is_integer(H) ->
     fizzbuzz(T, [H | Acc], true);
 fizzbuzz([], Acc, _match) -> Acc.
 
-has3Digit(N) when is_integer(N), N < 10 -> N == 3;
+has3Digit(N) when is_integer(N), N < 10 ->
+  N == 3;
 has3Digit(N) when is_integer(N) ->
     case N rem 10 of
       3 -> true;
