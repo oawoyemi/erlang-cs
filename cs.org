@@ -65,6 +65,14 @@ http://erlware.org/otp-21-new-sys_config_src-option-in-relx/
 
    both vm.args and sys.config files may contain OS environment variables that will be replaced
 
+
+** dynamic config
+
+- Note that, unlike previous versions, if you use the _src variants you do not
+  have to set RELX_REPLACE_OS_VARS in order for the start script to do the
+  replacement, this will happen automatically if the .src files are present in
+  the release.
+
 * additional libs (ERL_LIBS)
   Environment variable ERL_LIBS (if defined) is to contain a colon-separated
   (for Unix-like systems) or semicolon-separated (for Windows) list of

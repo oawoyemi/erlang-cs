@@ -1,6 +1,7 @@
 -module(records).
 %% -include("records.hrl").
 -compile(export_all).
+
 -record(included, {some_field, some_default = "yeah!", unimaginative_name}).
 
 -record(robot, {name,

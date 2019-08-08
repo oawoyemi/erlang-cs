@@ -175,8 +175,8 @@ H.
 
 dicts() ->
 
-  D = lists:foldl(fun(V, Dict) -> Dict:append(a, V) end, dict:new(), [1,2,3]),
-dict:to_list(D),
+    D = lists:foldl(fun(V, Dict) -> Dict:append(a, V) end, dict:new(), [1,2,3]),
+    dict:to_list(D),
 
 %%> [{a,[1,2,3]}]
 D0 = lists:foldl(fun(V, Dict) -> Dict:append(b, V) end, D, [1,2,3]),
@@ -259,8 +259,7 @@ comprehension_filter() ->
     %filtering generators
     Weather = [{london, fog}, {paris, sun}, {boston, fog}, {vancouver, snow}],
     FoggyPlaces = [X || {X, fog} <- Weather],
-    FoggyPlaces.
-%% [london,boston]
+    FoggyPlaces = [london,boston].
 
 comprehension_multiple_generators() ->
     [X + Y || X <- [1, 2], Y <- [2, 3]].
@@ -278,6 +277,14 @@ subtract() ->
     [a, b, c] -- [a, b, c, d].
 
 binary_processing() ->
+    Split = binary:split(<<"credentials/73f286e89d8b9b7e1a2942140df4c806d8f8d5d7">>, <<"/">>, [global, trim_all]),
+    Split = [<<"credentials">>, <<"73f286e89d8b9b7e1a2942140df4c806d8f8d5d7">>],
+
+    nomatch = binary:match(<<"-key">>, <<"topic-key">>),
+  {5,4} = binary:match(<<"topic-key">>, <<"-key">>), % {5,4}
+    binary:match(<<"topic-key">>, <<"-value">>), % nomatch
+    binary:match(<<"topic-value">>, <<"-value">>), % {5,6}
+
     H = <<"hello">>, W = <<"world">>,
     <<"hello world">> = <<H/binary," ", W/binary>>,
     <<1,2,4>> = << <<X>> || X <- [1,2,3] >>,
@@ -285,10 +292,11 @@ binary_processing() ->
     [ X || <<X:32/big-signed-integer>> <= <<0,0,0,1,0,0,0,2>>], % [1,2]
 
  %% extract the first 32 bits from the binary, complete matching statement:
-  <<_B1:32, _/binary>> = B.
+  <<_B1:32, _/binary>> = _B.
 
+map_atoms_escaped_binary() ->
 % map atom list to escaped binary string
-A = [blah, hey, atom, 'load-b'],
+    A = [blah, hey, atom, 'load-b'],
     lists:foldl(fun(X, Acc)->
                         E = <<"\"", (atom_to_binary(X, utf8))/binary, "\",">>, <<Acc/binary,E/binary>>
                 end,
@@ -300,33 +308,32 @@ A = [blah, hey, atom, 'load-b'],
 integer_to_binary() ->
 <<"8443">> = erlang:integer_to_binary(8443).
 
-concat_binary() ->
+binary() ->
     list_to_binary([<<"foo">>, <<"bar">>]).
 
-
+lists() ->
 %%nested list comp
-L = lists:seq(1, 10).
-[Y || Y <- [X*2 || X <- L], Y<10]. %% [2,4,6,8]
+    L = lists:seq(1, 10),
+    [Y || Y <- [X*2 || X <- L], Y<10], %% [2,4,6,8]
 
 %% higher order functions
-lists:seq(1, 10).
-lists:map(fun(X) -> [X,X,1,1] end, [1, 2, 3]). %[[1,1,1,1],[2,2,1,1],[3,3,1,1]]
-lists:flatmap(fun(X) -> [X,X,1,1] end, [1, 2, 3]). %[1,1,1,1,2,2,1,1,3,3,1,1]
+    lists:map(fun(X) -> [X,X,1,1] end, [1, 2, 3]), %[[1,1,1,1],[2,2,1,1],[3,3,1,1]]
+    lists:flatmap(fun(X) -> [X,X,1,1] end, [1, 2, 3]), %[1,1,1,1,2,2,1,1,3,3,1,1]
 
 % update or replace key
-lists:keystore(<<"blah">>, 1, E, {<<"blah">>,x}).
+    lists:keystore(<<"blah">>, 1, E, {<<"blah">>,x}).
 %%[{<<"timestamp">>,123},
  %%{<<"reported_by">>,<<"source">>},
  %%{<<"details">>,<<"status is great">>},
  %%{<<"blah">>,x}]
 
 partition() ->
-  R = [{"/internal/a",couch_stats_http_handler,[]},
-   {"/internal/b",du_auth_version_h,[]},
-   {"/internal/c",du_auth_healthcheck_h,[]},
-   {"/_sync",du_auth_sync_h,[]},
-   {"/endpoint/:id",du_auth_credentials_h,[]},
-   {"/blah",du_auth_auth_h,[]}],
+  R = [{"/internal/a",x_handler,[]},
+   {"/internal/b",x_version_h,[]},
+   {"/internal/c",x_healthcheck_h,[]},
+   {"/_sync",x_sync_h,[]},
+   {"/endpoint/:id",x_credens_h,[]},
+   {"/blah",x_auth_h,[]}],
   lists:partition(fun({X,_,_}) -> string:find(X, "/internal/") =:= X end, R),
 %% partition lists into sublists and a remainder by key
 
@@ -345,3 +352,16 @@ proplists() ->
     proplists:get_value(b, L), % 2
     proplists:get_value(e, L), % undefined
     proplists:get_value(e, L, undefined). % undefined
+
+logging() ->
+    lager:warning("Some message with a term: ~p", ["bah"]),
+    lager:set_loglevel(lager_console_backend, debug).
+
+prometheus_cowboy() ->
+    %% custom labels
+    application:set_env(prometheus, cowboy_instrumenter, [{labels_module, ?MODULE},
+                                                        {early_error_labels, [qwe]}]).
+
+records() ->
+    %% from the shell rr("include/somefile.hrl").
+    ok.
