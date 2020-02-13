@@ -1,4 +1,4 @@
-module(fizzbuzz).
+-module(fizzbuzz).
 
 -export([t/0, t/1]).
 
@@ -14,20 +14,23 @@ t(_Limit) ->
 fizzbuzz([H | T]) ->
     io:format("~b: ", [H]),
     fizzbuzz({H rem 3, H rem 5}),
-    io:format("~n", []),
+    io:format("~n"),
     fizzbuzz(T);
 
 fizzbuzz([]) ->
     io:format("done~n");
 
 fizzbuzz({0,0}) ->
-    io:format("fizzbuzz", []);
+    io:format("fizzbuzz");
 
 fizzbuzz({0, _}) ->
-    io:format("fizz", []);
+    io:format("fizz");
 
 fizzbuzz({_, 0}) ->
-    io:format("buzz", []);
+    io:format("buzz");
 
 fizzbuzz(_) ->
     ok.
+
+fb([H|T]) ->
+    fb({H rem 3, H rem 5}).
