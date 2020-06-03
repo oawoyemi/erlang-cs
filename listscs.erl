@@ -101,3 +101,10 @@ list_diff() ->
 list_length() ->
   L = [x,y],
   length(L).
+
+
+filtermap(Env) ->
+    Keys = [<<"x">>,<<"y">>, <<"x">>, undefined, <<"appTargetIP">>],
+    FilterUndefinedValues = fun(undefined) -> false;(Key) -> proplists:get_value(Key, Env) end,
+    Values = lists:filtermap(FilterUndefinedValues, Keys),
+    list_to_tuple([environ|Values]).
